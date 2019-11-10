@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import Header from './components/Header';
+import HomePage from './pages/HomePage';
+import MoviesPage from './pages/MoviesPage';
+import MovieDeatailsPage from './pages/MovieDetailsPage';
+
+import routes from './routes';
+
+// const api = '';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <div className="App ui container">
+        <Switch>
+          <Route path={routes.MOVIE_DETAILS} component={MovieDeatailsPage} />
+          <Route path={routes.MOVIES} component={MoviesPage} />
+          <Route path={routes.HOME} component={HomePage} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
