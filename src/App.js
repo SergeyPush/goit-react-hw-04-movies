@@ -8,13 +8,12 @@ import MovieDeatailsPage from './pages/MovieDetailsPage';
 
 import routes from './routes';
 
-// const api = '';
-
 function App() {
   return (
     <BrowserRouter>
-      <Header />
       <div className="App ui container">
+        <Header />
+
         <Switch>
           <Route path={routes.MOVIE_DETAILS} component={MovieDeatailsPage} />
           <Route path={routes.MOVIES} component={MoviesPage} />

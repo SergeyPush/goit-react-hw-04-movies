@@ -26,4 +26,46 @@ const getMovieByID = id => {
     });
 };
 
-export { getTrendingMovies, getMovieByID };
+const getCastById = id => {
+  return axios
+    .get(`https://api.themoviedb.org/3/movie/${id}/credits`, {
+      params: {
+        api_key: API_KEY,
+      },
+    })
+    .then(response => response.data.cast);
+};
+
+const getReviewsById = id => {
+  return axios
+    .get(`https://api.themoviedb.org/3/movie/${id}/reviews`, {
+      params: {
+        api_key: API_KEY,
+        language: 'en-US',
+        page: 1,
+      },
+    })
+    .then(response => response.data.results);
+};
+
+const searchMovieByName = query => {
+  return axios
+    .get('https://api.themoviedb.org/3/search/movie', {
+      params: {
+        api_key: API_KEY,
+        query,
+        language: 'en-US',
+        page: 1,
+        nclude_adult: false,
+      },
+    })
+    .then(response => response.data.results);
+};
+
+export {
+  getTrendingMovies,
+  getMovieByID,
+  getCastById,
+  getReviewsById,
+  searchMovieByName,
+};

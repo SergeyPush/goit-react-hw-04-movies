@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, Route } from 'react-router-dom';
 import { getMovieByID } from '../services/themovieDB';
+import Cast from '../components/Cast';
+import Reviews from '../components/Reviews';
 
 class MovieDetailsPage extends Component {
   state = {
@@ -22,19 +24,20 @@ class MovieDetailsPage extends Component {
   };
 
   render() {
-    console.log(this.state.movie);
     const {
       title,
       release_date,
       overview,
       poster_path,
       genres,
+      id,
     } = this.state.movie;
+    const { url, path } = this.props.match;
     return (
       <div>
         <button
           type="button"
-          className="ui compact labeled icon button"
+          className="ui tiny compact labeled icon button"
           onClick={this.onGoBack}
         >
           <i className="arrow left icon" />
@@ -70,17 +73,28 @@ class MovieDetailsPage extends Component {
             className="item"
             exact
             activeClassName="active"
-            to="/movies/499701"
+            to={`${url}/cast`}
           >
-            Bio
+            Cast
           </NavLink>
-          <NavLink className="item" exact activeClassName="active" to="/movies">
-            Photos
+          <NavLink
+            className="item"
+            exact
+            activeClassName="active"
+            to={`${url}/reviews`}
+          >
+            Reviews
           </NavLink>
         </div>
-        <div className="ui bottom attached segment">
-          <p>Some text</p>
-        </div>
+
+        <Route
+          path={`${path}/cast`}
+          render={props => <Cast {...props} movieId={id} />}
+        />
+        <Route
+          path={`${path}/reviews`}
+          render={props => <Reviews {...props} movieId={id} />}
+        />
       </div>
     );
   }
