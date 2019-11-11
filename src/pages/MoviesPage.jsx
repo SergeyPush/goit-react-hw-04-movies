@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import qs from 'query-string';
 import { searchMovieByName } from '../services/themovieDB';
 import routes from '../routes';
 
@@ -10,7 +10,28 @@ class MoviesPage extends Component {
     movies: [],
   };
 
-  componentDidMount() {}
+  async componentDidMount() {
+    const { query } = qs.parse(this.props.location.search);
+    if (!query) {
+      return;
+    }
+    const movies = await searchMovieByName(query);
+    this.setState({
+      movies,
+    });
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
+    const { query: prevQuery } = qs.parse(prevProps.location.search);
+    const { query: nextQuery } = qs.parse(this.props.location.search);
+    if (prevQuery === nextQuery) {
+      return;
+    }
+    const movies = await searchMovieByName(nextQuery);
+    this.setState({
+      movies,
+    });
+  }
 
   onInput = e => {
     const { value } = e.target;
@@ -21,11 +42,14 @@ class MoviesPage extends Component {
 
   onFormSubmit = async e => {
     e.preventDefault();
-    const movies = await searchMovieByName(this.state.searchQuery);
 
     this.setState({
-      movies,
       searchQuery: '',
+    });
+
+    this.props.history.push({
+      ...this.props.location,
+      search: `query=${this.state.searchQuery}`,
     });
   };
 
@@ -51,7 +75,12 @@ class MoviesPage extends Component {
         <div className="ui middle aligned list">
           {movies.map(movie => (
             <div className="item" key={movie.id}>
-              <Link to={`${routes.MOVIES}/${movie.id}`}>
+              <Link
+                to={{
+                  pathname: `${routes.MOVIES}/${movie.id}`,
+                  state: { from: this.props.location },
+                }}
+              >
                 {movie.original_title || movie.original_name}
               </Link>
             </div>

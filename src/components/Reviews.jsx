@@ -31,14 +31,18 @@ class Reviews extends Component {
     const { reviews } = this.state;
     return (
       <div className="ui bottom attached segment">
-        {reviews.map(review => {
-          return (
-            <div key={review.id}>
-              <h3>{review.author}</h3>
-              <p>{review.content}</p>
-            </div>
-          );
-        })}
+        {reviews.length > 0 ? (
+          reviews.map(review => {
+            return (
+              <div key={review.id}>
+                <h3>{review.author}</h3>
+                <p>{review.content}</p>
+              </div>
+            );
+          })
+        ) : (
+          <p>No reviews available</p>
+        )}
       </div>
     );
   }

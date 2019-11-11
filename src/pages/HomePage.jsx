@@ -25,7 +25,12 @@ class HomePage extends Component {
         <div className="ui middle aligned list">
           {movies.map(movie => (
             <div className="item" key={movie.id}>
-              <Link to={`${routes.MOVIES}/${movie.id}`}>
+              <Link
+                to={{
+                  pathname: `${routes.MOVIES}/${movie.id}`,
+                  state: { from: this.props.location },
+                }}
+              >
                 {movie.original_title || movie.original_name}
               </Link>
             </div>

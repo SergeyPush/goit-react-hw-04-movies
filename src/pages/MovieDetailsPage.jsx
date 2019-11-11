@@ -20,7 +20,11 @@ class MovieDetailsPage extends Component {
   }
 
   onGoBack = () => {
-    this.props.history.push('/');
+    if (this.props.location.state && this.props.location.state.from) {
+      this.props.history.push(this.props.location.state.from);
+      return;
+    }
+    this.props.history.goBack();
   };
 
   render() {
@@ -31,7 +35,9 @@ class MovieDetailsPage extends Component {
       poster_path,
       genres,
       id,
+      vote_average,
     } = this.state.movie;
+    const year = new Date(release_date).getFullYear();
     const { url, path } = this.props.match;
     return (
       <div>
@@ -51,10 +57,13 @@ class MovieDetailsPage extends Component {
               alt=""
             />
             <h1>
-              {title}({release_date})
+              {title} ({year})
             </h1>
             <h3>Overview</h3>
             <p>{overview}</p>
+
+            <h3>Rating</h3>
+            <p>User score: {vote_average}</p>
             <h3>Genres</h3>
             <div className="ui horizontal list">
               {genres.map(genre => (
@@ -73,7 +82,10 @@ class MovieDetailsPage extends Component {
             className="item"
             exact
             activeClassName="active"
-            to={`${url}/cast`}
+            to={{
+              pathname: `${url}/cast`,
+              state: { ...this.props.location.state },
+            }}
           >
             Cast
           </NavLink>
@@ -81,7 +93,10 @@ class MovieDetailsPage extends Component {
             className="item"
             exact
             activeClassName="active"
-            to={`${url}/reviews`}
+            to={{
+              pathname: `${url}/reviews`,
+              state: { ...this.props.location.state },
+            }}
           >
             Reviews
           </NavLink>
