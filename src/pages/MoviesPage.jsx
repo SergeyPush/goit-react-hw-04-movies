@@ -27,6 +27,12 @@ class MoviesPage extends Component {
     if (prevQuery === nextQuery) {
       return;
     }
+    if (!nextQuery) {
+      this.setState({
+        movies: [],
+      });
+      return;
+    }
     const movies = await searchMovieByName(nextQuery);
     this.setState({
       movies,
