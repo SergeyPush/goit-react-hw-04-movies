@@ -22,7 +22,7 @@ const getMovieByID = id => {
     .then(response => response.data)
     .catch(error => {
       // error handling
-      return '';
+      return 'not found';
     });
 };
 

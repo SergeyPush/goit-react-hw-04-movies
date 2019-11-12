@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import T from 'prop-types';
+
 import routes from '../routes';
 import { getTrendingMovies } from '../services/themovieDB';
 
 class HomePage extends Component {
+  static propTypes = {
+    location: T.any.isRequired,
+  };
+
   state = {
     movies: [],
   };
@@ -18,6 +24,7 @@ class HomePage extends Component {
 
   render() {
     const { movies } = this.state;
+    const { location } = this.props;
 
     return (
       <div>
@@ -28,7 +35,7 @@ class HomePage extends Component {
               <Link
                 to={{
                   pathname: `${routes.MOVIES}/${movie.id}`,
-                  state: { from: this.props.location },
+                  state: { from: location },
                 }}
               >
                 {movie.original_title || movie.original_name}

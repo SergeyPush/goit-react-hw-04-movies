@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 
 import { NavLink, Route } from 'react-router-dom';
+import T from 'prop-types';
 import { getMovieByID } from '../services/themovieDB';
 import Cast from '../components/Cast';
 import Reviews from '../components/Reviews';
 
 class MovieDetailsPage extends Component {
+  static propTypes = {
+    match: T.object.isRequired,
+    location: T.object.isRequired,
+    history: T.object.isRequired,
+  };
+
   state = {
     movie: '',
   };
 
   componentDidMount() {
+    // eslint-disable-next-line react/destructuring-assignment
     const { movieId } = this.props.match.params;
     getMovieByID(movieId).then(movie =>
       this.setState({
@@ -28,17 +36,25 @@ class MovieDetailsPage extends Component {
   };
 
   render() {
+    const { movie } = this.state;
     const {
       title,
-      release_date,
+      release_date: releaseDate,
       overview,
-      poster_path,
+      poster_path: posterPath,
       genres,
       id,
-      vote_average,
-    } = this.state.movie;
-    const year = new Date(release_date).getFullYear();
-    const { url, path } = this.props.match;
+      vote_average: voteAverage,
+    } = movie;
+
+    const {
+      location: { state },
+    } = this.props;
+
+    const year = new Date(releaseDate).getFullYear();
+    const {
+      match: { url, path },
+    } = this.props;
     return (
       <div>
         <button
@@ -49,11 +65,11 @@ class MovieDetailsPage extends Component {
           <i className="arrow left icon" />
           Go back
         </button>
-        {this.state.movie ? (
+        {movie ? (
           <div className="movie_details">
             <img
               className="ui small image"
-              src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${poster_path}`}
+              src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${posterPath}`}
               alt=""
             />
             <h1>
@@ -63,7 +79,7 @@ class MovieDetailsPage extends Component {
             <p>{overview}</p>
 
             <h3>Rating</h3>
-            <p>User score: {vote_average}</p>
+            <p>User score: {voteAverage}</p>
             <h3>Genres</h3>
             <div className="ui horizontal list">
               {genres.map(genre => (
@@ -84,7 +100,7 @@ class MovieDetailsPage extends Component {
             activeClassName="active"
             to={{
               pathname: `${url}/cast`,
-              state: { ...this.props.location.state },
+              state: { ...state },
             }}
           >
             Cast
@@ -95,7 +111,7 @@ class MovieDetailsPage extends Component {
             activeClassName="active"
             to={{
               pathname: `${url}/reviews`,
-              state: { ...this.props.location.state },
+              state: { ...state },
             }}
           >
             Reviews
@@ -104,10 +120,12 @@ class MovieDetailsPage extends Component {
 
         <Route
           path={`${path}/cast`}
+          // eslint-disable-next-line react/jsx-props-no-spreading
           render={props => <Cast {...props} movieId={id} />}
         />
         <Route
           path={`${path}/reviews`}
+          // eslint-disable-next-line react/jsx-props-no-spreading
           render={props => <Reviews {...props} movieId={id} />}
         />
       </div>

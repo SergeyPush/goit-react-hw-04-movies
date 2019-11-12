@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import T from 'prop-types';
 import { getReviewsById } from '../services/themovieDB';
 
 class Reviews extends Component {
+  static propTypes = {
+    movieId: T.number.isRequired,
+  };
+
   state = {
     reviews: [],
   };
@@ -17,10 +22,11 @@ class Reviews extends Component {
     });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     const { movieId } = this.props;
-    if (prevProps.movieId !== this.props.movieId) {
+    if (prevProps.movieId !== movieId) {
       const reviews = await getReviewsById(movieId);
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         reviews,
       });
@@ -34,8 +40,8 @@ class Reviews extends Component {
         {reviews.length > 0 ? (
           reviews.map(review => {
             return (
-              <div key={review.id}>
-                <h3>{review.author}</h3>
+              <div key={review.id} className="ui segment">
+                <h4>{review.author}</h4>
                 <p>{review.content}</p>
               </div>
             );

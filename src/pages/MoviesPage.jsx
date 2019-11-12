@@ -64,7 +64,7 @@ class MoviesPage extends Component {
     return (
       <div>
         <div>
-          <h1 className="">Movies Page</h1>
+          <h1>Movies Page</h1>
 
           <form onSubmit={this.onFormSubmit}>
             <div className="ui left icon input focus">
@@ -76,6 +76,9 @@ class MoviesPage extends Component {
               />
               <i className="search icon" />
             </div>
+            <button type="submit" className="ui button ">
+              Search
+            </button>
           </form>
         </div>
         <div className="ui middle aligned list">
