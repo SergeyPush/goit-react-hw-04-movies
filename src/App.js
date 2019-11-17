@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
@@ -17,7 +17,8 @@ function App() {
         <Switch>
           <Route path={routes.MOVIE_DETAILS} component={MovieDeatailsPage} />
           <Route path={routes.MOVIES} component={MoviesPage} />
-          <Route path={routes.HOME} component={HomePage} />
+          <Route path={routes.HOME} exact component={HomePage} />
+          <Redirect to={routes.HOME} component={HomePage} />
         </Switch>
       </div>
     </BrowserRouter>
