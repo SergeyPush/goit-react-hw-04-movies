@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import qs from 'query-string';
+import T from 'prop-types';
 import { searchMovieByName } from '../services/themovieDB';
 import routes from '../routes';
 
@@ -10,8 +11,16 @@ class MoviesPage extends Component {
     movies: [],
   };
 
+  static propTypes = {
+    location: T.object.isRequired,
+    history: T.object.isRequired,
+  };
+
   async componentDidMount() {
-    const { query } = qs.parse(this.props.location.search);
+    const {
+      location: { search },
+    } = this.props;
+    const { query } = qs.parse(search);
     if (!query) {
       return;
     }
@@ -21,19 +30,24 @@ class MoviesPage extends Component {
     });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
+    const {
+      location: { search },
+    } = this.props;
     const { query: prevQuery } = qs.parse(prevProps.location.search);
-    const { query: nextQuery } = qs.parse(this.props.location.search);
+    const { query: nextQuery } = qs.parse(search);
     if (prevQuery === nextQuery) {
       return;
     }
     if (!nextQuery) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         movies: [],
       });
       return;
     }
     const movies = await searchMovieByName(nextQuery);
+    // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
       movies,
     });
@@ -87,6 +101,7 @@ class MoviesPage extends Component {
               <Link
                 to={{
                   pathname: `${routes.MOVIES}/${movie.id}`,
+                  // eslint-disable-next-line react/destructuring-assignment
                   state: { from: this.props.location },
                 }}
               >
